@@ -1,2 +1,3 @@
 # TodoApp-TSX
-First App with Typescript and React
+This is my first application with Typescript and React.
+
