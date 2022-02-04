@@ -11,27 +11,34 @@ interface Props {
     todos: Todo[],
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
 }
+
 const TodoCard: React.FC<Props> = ({ todo, todos, setTodos }) => {
 
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
 
+
+    const saveInLocalStorage = ():void => localStorage.setItem('tasks', JSON.stringify(todos))
+
     const handleDone = (id: number) => {
         setTodos(todos.map((todo) =>
             //change the property isDone to the opposite value
             todo.id === id ? { ...todo, isDone: !todo.isDone } : todo))
+            saveInLocalStorage()
     }
 
     const handleDelete = (id: number) => {
         // returns all the tasks that do not match the id passed and sets the todos to that array
         setTodos(todos.filter(todo => todo.id !== id))
+        saveInLocalStorage()
     }
 
     const handleEdit = (e: React.FormEvent, id: number) => {
         e.preventDefault();
         setTodos(todos.map((todo) => todo.id === id ? { ...todo, todo: editTodo } : todo));
         setEdit(false)
+        saveInLocalStorage()
     }
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -55,7 +62,7 @@ const TodoCard: React.FC<Props> = ({ todo, todos, setTodos }) => {
                     )
             }
 
-            <div>
+            <div className='icons__container'>
                 <span className="icon" onClick={() => {
                     // if edit mode is not true and the task is not done, then it can be edited
                     if (!edit && !todo.isDone) setEdit(!edit)

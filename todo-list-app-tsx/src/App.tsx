@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import InputField from './components/InputField/InputField';
 import TaskList from './components/TaskList/TaskList';
@@ -7,9 +7,22 @@ import { Todo } from './task-model';
 
 const App: React.FC = () => {
 
-  const [todo, setTodo] = useState<string>("")
-  const [todos, setTodos] = useState<Todo[]>([]); //Define todos as an array of Todo interface
+  const savedTasks= JSON.parse(localStorage.getItem('tasks')||'[]')
+  console.log(savedTasks)
+  console.log(savedTasks.length)
 
+  useEffect(() => {
+    if(savedTasks.length>0)setTodos(savedTasks)
+    else{ localStorage.setItem('tasks', '[]')}
+  },[]);
+  
+
+  const [todo, setTodo] = useState<string>("")
+  const [todos, setTodos] = useState<Todo[]|[]>(savedTasks); //Define todos as an array of Todo interface
+  
+ 
+  
+  // 
   //the event has to be defined too. Good practice is to define it as FormEvent
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +34,9 @@ const App: React.FC = () => {
       setTodo('');
     }
   }
-  console.log(todos)
+    localStorage.setItem('tasks', JSON.stringify(todos))
+  
+ 
 
   return (
     <div className="App">
